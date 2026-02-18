@@ -1,0 +1,37 @@
+[
+  {
+    "flight_number": "SU123",
+    "destination": "Москва",
+    "departure_time": "08:30"
+  },
+  {
+    "flight_number": "FR456",
+    "destination": "Варшава",
+    "departure_time": "12:15"
+  },
+  {
+    "flight_number": "BT789",
+    "destination": "Москва",
+    "departure_time": "18:40"
+  },
+  {
+    "flight_number": "MS356",
+    "destination": "Минск",
+    "departure_time": "14:10"
+  },
+  {
+    "flight_number": "YT632",
+    "destination": "Минск",
+    "departure_time": "10:25"
+  },
+  {
+    "flight_number": "OF092",
+    "destination": "Париж",
+    "departure_time": "11:05"
+  },
+  {
+    "flight_number": "LV623",
+    "destination": "Варшава",
+    "departure_time": "22:55"
+  }
+]

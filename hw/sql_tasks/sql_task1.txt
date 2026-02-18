@@ -1,0 +1,171 @@
+1)Создайте таблицу actors 
+CREATE TABLE "actors" ( id INTEGER PRIMARY KEY AUTOINCREMENT, age INTEGER, sex TEXT CHECK(sex = 'male' or sex = 'female'), country TEXT , name TEXT NOT NULL , last_name TEXT NOT NULL);
+
+2)Добавьте колонку salary типа INTEGER.
+ALTER TABLE actors
+ADD COLUMN salary INTEGER
+
+3)Добавьте проверку, что age не может быть меньше 0.
+ALTER TABLE actors
+ADD COLUMN age INTEGER CHECK (age > 0);
+Её получается придется сначала удалить и после уже создать новую уже с проверкой
+Я пробывал добавить CHECK через CONSTRAINT, но он постоянно ругался на неверный синтаксис, хотя я запрос писал по официальной документации
+
+4)Удалите колонку salary.
+ALTER TABLE actors 
+DROP COLUMN salary 
+
+5)Добавьте минимум 20–30 актёров из разных стран, с разным возрастом и полом.
+INSERT INTO actors (age, sex, country, name, last_name)
+VALUES (60,"male","USA","Tom","Croose")
+
+VALUES (58, "male", "USA", "Leonardo", "DiCaprio");
+ 
+VALUES (49, "female", "USA", "Jennifer", "Lawrence");
+
+VALUES (63, "male", "USA", "Matt", "Damon");
+
+VALUES (37, "female", "USA", "Natalie", "Portman");
+
+VALUES (76, "male", "USA", "Harrison", "Ford");
+
+VALUES (28, "female", "USA", "Hailee", "Steinfeld");
+
+VALUES (42, "female", "USA", "Anne", "Hathaway");
+
+VALUES (55, "male", "USA", "Will", "Smith");
+
+VALUES (33, "female", "USA", "Brie", "Larson");
+
+VALUES (49, "male", "UK", "Benedict", "Cumberbatch");
+
+VALUES (34, "female", "UK", "Emma", "Stone");
+
+VALUES (71, "male", "UK", "Gary", "Oldman");
+
+VALUES (41, "female", "UK", "Rosamund", "Pike");
+
+VALUES (65, "male", "UK", "Daniel", "Day-Lewis");
+
+VALUES (45, "male", "France", "Omar", "Sy");
+
+VALUES (52, "female", "France", "Audrey", "Tautou");
+
+VALUES (38, "male", "France", "Vincent", "Cassel");
+
+VALUES (43, "male", "Canada", "Ryan", "Reynolds");
+
+VALUES (39, "female", "Canada", "Rachel", "McAdams");
+
+VALUES (50, "male", "Canada", "Keanu", "Reeves");
+
+VALUES (53, "male", "Australia", "Hugh", "Jackman");
+
+VALUES (44, "female", "Australia", "Nicole", "Kidman");
+
+VALUES (35, "male", "Australia", "Chris", "Hemsworth");
+
+VALUES (58, "male", "India", "Shah", "Rukh Khan");
+
+VALUES (42, "female", "India", "Deepika", "Padukone");
+
+VALUES (62, "male", "Spain", "Javier", "Bardem");
+
+VALUES (48, "female", "Mexico", "Salma", "Hayek");
+
+VALUES (55, "male", "Japan", "Ken", "Watanabe");
+
+VALUES (37, "female", "South Korea", "Gianna", "Jun");
+
+6)Добавьте 5 актёров только с обязательными полями (name, last_name), остальные поля оставить NULL.
+INSERT INTO actors (name, last_name)
+VALUES ("Sergey", "Bezrukov");
+VALUES ("Sergey", "Borunov");
+VALUES ("Gleb", "Koluznuy");
+VALUES ("Alexander", "Petrov");
+VALUES ("Fedor", "Dobronravov");
+
+7)Установите страну "Unknown" всем актёрам, у которых она NULL.
+UPDATE actors
+SET country = "Unknown"
+WHERE country IS NULL
+
+8)Повысить возраст на 2 года всем актрисам (female) старше 40 лет.
+UPDATE actors
+SET age = age + 2
+WHERE sex = "female" AND age>40
+
+9)Вывести актрис из Франции младше 35 лет.
+SELECT name, last_name FROM actors
+WHERE country = "USA" AND sex = "female" AND age < 35
+
+10)Вывести 5 самых молодых актёров.
+SELECT * FROM actors
+WHERE age IS NOT NULL AND sex = "male"
+ORDER BY age ASC 
+LIMIT 5
+
+11)Посчитать и вывести общее количество актёров, средний возраст, минимальный и максимальный возраст
+SELECT COUNT(name) AS "Actors count",
+AVG(age) as "Average age",
+MIN(age) as "Minimal age",
+MAX(age) as "Maximal age"
+FROM actors
+
+12)Вывести страны, в которых более 5 и менее 10 актёров.
+SELECT country, COUNT(*) AS "actor count"
+FROM actors
+GROUP BY country
+HAVING "actor count" > 5 AND "actor count" < 10
+
+13)Посчитать средний возраст мужчин и женщин.
+SELECT sex, avg(age) AS "Average age"
+FROM actors
+WHERE sex is not null and age is not null
+GROUP BY sex
+
+14)Для каждой страны вывести самого молодого актёра.
+SELECT country, name, last_name, min(age) AS "Average age"
+FROM actors
+WHERE country != "Unknown" AND sex = "male"
+GROUP BY country
+
+15)Вывести страны, в которых нет ни одной актрисы (female).
+SELECT country
+FROM actors
+WHERE country != "Unknown" AND sex IS NOT NULL
+GROUP BY country
+HAVING COUNT(CASE WHEN sex = "female" THEN 1 END) = 0;
+
+16)Вывести актёров, которые являются самыми старшими в своей стране.
+SELECT country, name, last_name, Max(age) AS "old"
+FROM actors
+WHERE country != "Unknown" AND sex = "male"
+GROUP BY country
+
+17)Вывести страну с самым большим средним возрастом актёров.
+
+18)Вывести актёров из тех стран, где есть хотя бы одна актриса старше 50 лет.
+SELECT country, AVG(age) AS average_age
+FROM actors
+WHERE age IS NOT NULL AND country IS NOT NULL
+GROUP BY country
+ORDER BY average_age DESC
+LIMIT 1;
+
+19)Для каждой страны посчитать процент мужчин от общего числа актёров.
+     Отсортировать по убыванию процента.
+
+20)Найти возраст(а), который встречается более 2 раз.
+     Затем вывести всех актёров этого возраста.
+SELECT id, name, last_name, age, sex, country
+FROM actors
+WHERE age IN (
+    SELECT age
+    FROM actors
+    WHERE age IS NOT NULL
+    GROUP BY age
+    HAVING COUNT(*) >= 2
+)
+ORDER BY age, name;
+
